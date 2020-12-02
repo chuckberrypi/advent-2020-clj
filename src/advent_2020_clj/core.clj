@@ -200,9 +200,9 @@
                     1800
                     1745
                     1993])
-(def test-input [1 2 3 4 5])
+(def test-input [1 2 3 4 5 6 7])
 
-(defn pair-adds-to-2020 [p]
+(defn adds-to-2020 [p]
   (= 2020 (reduce + p)))
 
 (defn first-pairs [[head & rest :as s]]
@@ -220,7 +220,7 @@
 (defn magic-pair [input]
   (->> input
        all-pairs
-       (filter pair-adds-to-2020)
+       (filter adds-to-2020)
        first))
 
 (defn answer [input]
@@ -229,5 +229,43 @@
        (reduce *)))
 
 
+(defn all-first-triads [s]
+  (loop [f (first s) 
+         [scnd & thrds] (rest s) 
+         acc []]
+    (if (not-empty thrds)
+      (recur f thrds (into acc (for [thrd thrds] [f scnd thrd])))
+      acc)))
 
+(defn all-triads [s]
+  (loop [vals s
+         acc '()]
+    (let [triads (all-first-triads vals)]
+      (if (not-empty triads)
+        (recur (rest vals) (into acc triads))
+        acc)) ))
+
+(defn day-two-matching-triad [s]
+  (->> day-one-input
+      all-triads
+      (filter adds-to-2020)
+      ))
+(defn day-two-answer [s]
+  (->> day-one-input
+       day-two-matching-triad
+       (reduce *)))
+
+(comment
+(all-triads test-input)
+(day-two-matching-triad day-one-input)
+(->> day-one-input
+     day-two-matching-triad
+     seq
+     (reduce *))   
+
+(day-two-answer day-one-input)
+
+(reduce * [2 2 2])
+
+)
 
