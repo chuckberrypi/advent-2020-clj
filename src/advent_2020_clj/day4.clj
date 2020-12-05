@@ -1,4 +1,3 @@
-
 (ns advent-2020-clj.day4
   (:require
    [clojure.string :as str]
